@@ -85,7 +85,8 @@ static int mmc_bootstrap_controller(char *sysfs_path)
         if ((!strcmp(de->d_name, "uevent")) ||
             (!strcmp(de->d_name, "subsystem")) ||
             (!strcmp(de->d_name, "device")) ||
-            (!strcmp(de->d_name, "power"))) {
+            (!strcmp(de->d_name, "power")) ||
+            (!strcmp(de->d_name, "slot_name"))) {
             continue;
         }
 
