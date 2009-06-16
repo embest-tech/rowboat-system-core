@@ -813,6 +813,9 @@ int main(int argc, char **argv)
          * let the rc file figure out the rest.
          */
     mkdir("/dev", 0755);
+#ifdef BOARD_USES_LIRC
+    mknod("/dev/lirc0", S_IFCHR | 0600, (0x61 << 8));
+#endif
     mkdir("/proc", 0755);
     mkdir("/sys", 0755);
 
