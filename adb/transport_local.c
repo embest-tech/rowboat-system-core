@@ -111,17 +111,20 @@ int  local_connect(int  port)
     const char *host = getenv("ADBHOST");
     if (host) {
         fd = socket_network_client(host, port, SOCK_STREAM);
+	if ( fd >= 0 )
+        	snprintf(buf, sizeof buf, "%s%d", REMOTE_CLIENT_PREFIX, port - 1);
     }
 #endif
     if (fd < 0) {
         fd = socket_loopback_client(port, SOCK_STREAM);
+	if ( fd >= 0 )
+        	snprintf(buf, sizeof buf, "%s%d", LOCAL_CLIENT_PREFIX, port - 1);
     }
 
     if (fd >= 0) {
         D("client: connected on remote on fd %d\n", fd);
         close_on_exec(fd);
         disable_tcp_nagle(fd);
-        snprintf(buf, sizeof buf, "%s%d", LOCAL_CLIENT_PREFIX, port - 1);
         register_socket_transport(fd, buf, port);
         return 0;
     }
