@@ -406,11 +406,6 @@ ifc_configure(const char *ifname,
 
     ifc_init();
 
-    if (ifc_up(ifname)) {
-        printerr("failed to turn on interface %s: %s\n", ifname, strerror(errno));
-        ifc_close();
-        return -1;
-    }
     if (ifc_set_addr(ifname, address)) {
         printerr("failed to set ipaddr %s: %s\n", ipaddr_to_string(address), strerror(errno));
         ifc_close();
@@ -418,6 +413,11 @@ ifc_configure(const char *ifname,
     }
     if (ifc_set_mask(ifname, netmask)) {
         printerr("failed to set netmask %s: %s\n", ipaddr_to_string(netmask), strerror(errno));
+        ifc_close();
+        return -1;
+    }
+    if (ifc_up(ifname)) {
+        printerr("failed to turn on interface %s: %s\n", ifname, strerror(errno));
         ifc_close();
         return -1;
     }
