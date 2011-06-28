@@ -21,9 +21,6 @@ ifeq ($(strip $(INIT_BOOTCHART)),true)
 LOCAL_SRC_FILES += bootchart.c
 LOCAL_CFLAGS    += -DBOOTCHART=1
 endif
-ifeq ($(TARGET_BOOTLOADER_BOARD_NAME),ti816xevm)
-LOCAL_CFLAGS += -DAM389xEVM_SYSLINK
-endif
 
 LOCAL_MODULE:= init
 
