@@ -140,19 +140,18 @@ int dhcp_do_request(const char *interface,
             DHCP_PROP_NAME_PREFIX,
             interface);
 
-    snprintf(daemon_prop_name, sizeof(daemon_prop_name), "%s_%s",
-            DAEMON_PROP_NAME,
-            interface);
+    snprintf(daemon_prop_name, sizeof(daemon_prop_name), "%s",
+            DAEMON_PROP_NAME );
 
     /* Erase any previous setting of the dhcp result property */
     property_set(result_prop_name, "");
 
     /* Start the daemon and wait until it's ready */
     if (property_get(HOSTNAME_PROP_NAME, prop_value, NULL) && (prop_value[0] != '\0'))
-        snprintf(daemon_cmd, sizeof(daemon_cmd), "%s_%s:-h %s %s", DAEMON_NAME, interface,
+        snprintf(daemon_cmd, sizeof(daemon_cmd), "%s:-h %s %s", DAEMON_NAME,
                  prop_value, interface);
     else
-        snprintf(daemon_cmd, sizeof(daemon_cmd), "%s_%s:%s", DAEMON_NAME, interface, interface);
+        snprintf(daemon_cmd, sizeof(daemon_cmd), "%s:%s", DAEMON_NAME, interface);
     memset(prop_value, '\0', PROPERTY_VALUE_MAX);
     property_set(ctrl_prop, daemon_cmd);
     if (wait_for_property(daemon_prop_name, desired_status, 10) < 0) {
@@ -195,11 +194,10 @@ int dhcp_stop(const char *interface)
             DHCP_PROP_NAME_PREFIX,
             interface);
 
-    snprintf(daemon_prop_name, sizeof(daemon_prop_name), "%s_%s",
-            DAEMON_PROP_NAME,
-            interface);
+    snprintf(daemon_prop_name, sizeof(daemon_prop_name), "%s",
+            DAEMON_PROP_NAME );
 
-    snprintf(daemon_cmd, sizeof(daemon_cmd), "%s_%s", DAEMON_NAME, interface);
+    snprintf(daemon_cmd, sizeof(daemon_cmd), "%s", DAEMON_NAME );
 
     /* Stop the daemon and wait until it's reported to be stopped */
     property_set(ctrl_prop, daemon_cmd);
@@ -220,11 +218,10 @@ int dhcp_release_lease(const char *interface)
     const char *ctrl_prop = "ctl.stop";
     const char *desired_status = "stopped";
 
-    snprintf(daemon_prop_name, sizeof(daemon_prop_name), "%s_%s",
-            DAEMON_PROP_NAME,
-            interface);
+    snprintf(daemon_prop_name, sizeof(daemon_prop_name), "%s",
+            DAEMON_PROP_NAME );
 
-    snprintf(daemon_cmd, sizeof(daemon_cmd), "%s_%s", DAEMON_NAME, interface);
+    snprintf(daemon_cmd, sizeof(daemon_cmd), "%s", DAEMON_NAME );
 
     /* Stop the daemon and wait until it's reported to be stopped */
     property_set(ctrl_prop, daemon_cmd);
@@ -264,7 +261,7 @@ int dhcp_do_request_renew(const char *interface,
     property_set(result_prop_name, "");
 
     /* Start the renew daemon and wait until it's ready */
-    snprintf(daemon_cmd, sizeof(daemon_cmd), "%s_%s:%s", DAEMON_NAME_RENEW, interface, interface);
+    snprintf(daemon_cmd, sizeof(daemon_cmd), "%s:%s", DAEMON_NAME_RENEW, interface);
     memset(prop_value, '\0', PROPERTY_VALUE_MAX);
     property_set(ctrl_prop, daemon_cmd);
 
