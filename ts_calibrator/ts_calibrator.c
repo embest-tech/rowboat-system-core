@@ -42,6 +42,7 @@
 #define TS_PARAM_PATH DEV_(TS_PARAM)
 
 static const char fb_dev[] = "/dev/graphics/fb0";
+static const char cmd_dev[] = "/proc/cmdline";
 static const char input_dev[] = "/dev/input/event";
 static const char cf_file[] = "/data/system/calibration";
 static const char log[] = "/data/system/ts.log";
@@ -334,7 +335,36 @@ int main(int argc, char **argv)
     struct fb_fix_screeninfo finfo;
     struct stat s;
     int i;
+    int j;
     char runme[PROPERTY_VALUE_MAX];
+
+    char *disp_mode[2] = {"LVDS_1024x768", "VGA"};
+    char cmdline[1024];
+    char *ptr;
+    int fd;
+	
+    fd = open(cmd_dev, O_RDONLY);
+    if (fd < 0) {
+        log_write("Failed to open %s\n", cmd_dev);
+        goto err_log;
+    }
+
+    if (fd >= 0) {
+        int n = read(fd, cmdline, 1023);
+        if (n < 0) { 
+	    n = 0;
+    	    cmdline[n] = 0;
+        }
+    }
+
+    for (j = 0; j < 2; j++){
+	ptr = strstr(cmdline, disp_mode[j]);		
+    	if (ptr){
+            close(fd);
+            return 0;
+    	}
+
+    }
 
     property_get("ro.calibration", runme, "");
     if (runme[0] != '1')
